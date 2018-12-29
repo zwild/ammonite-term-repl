@@ -1,0 +1,38 @@
+#+startup: showall
+
+* ammonite-term-repl
+  Scala [[https://github.com/lihaoyi/Ammonite][Ammonite]] REPL in Emacs term mode.
+
+** Introduction
+
+** Usage
+   To start an ammonite repl, you can just hit ~M-x:~ with ~run-ammonite~
+
+   #+begin_src elisp
+   (add-hook 'scala-mode-hook
+             (lambda ()
+               (ammonite-term-repl-minor-mode t)))
+   #+end_src
+  
+** Keybindings
+| ammonite-term-repl             | "C-`" or "C-c C-z" |
+| ammonite-term-repl-send-defun  | "C-c C-e"          |
+| ammonite-term-repl-send-region | "C-c C-r"          |
+| ammonite-term-repl-load-file   | "C-c C-l"          |
+
+** Hooks
+   ~ammonite-term-repl-minor-mode-hook~
+   ~ammonite-term-repl-run-hook~
+
+** Variables
+   ~ammonite-term-repl-program-args~
+
+   An example
+   #+begin_src elisp
+   (setq ammonite-term-repl-program-args '("-s" "--no-default-predef"))
+   #+end_src
+
+** Why not comint-mode
+   Because ~(make-comint "amm")~ throws a =Exec format error=.
+   Run ~amm~ in *eshell* also get the same error.
+
