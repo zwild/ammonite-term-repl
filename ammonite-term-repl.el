@@ -26,6 +26,16 @@
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
+
+;;; Commentary:
+;; Usage
+;; (add-hook 'scala-mode-hook
+;;           (lambda ()
+;;             (ammonite-term-repl-minor-mode t)))
+
+;; You can modify your arguments by
+;; (setq ammonite-term-repl-program-args '("-s" "--no-default-predef"))
+
 ;;; Code:
 (require 'term)
 (require 'comint)
@@ -67,6 +77,7 @@
   :group 'ammonite-term-repl)
 
 (defun ammonite-term-repl-check-process ()
+  "Check if there is an active ammonite process."
   (unless (comint-check-proc ammonite-term-repl-buffer-name)
     (error "Ammonite is not running.")))
 
@@ -75,6 +86,7 @@
 
 ;;;###autoload
 (defun ammonite-term-repl-send-defun ()
+  "Send the definition to the ammonite buffer."
   (interactive)
   (ammonite-term-repl-check-process)
   (save-mark-and-excursion
@@ -113,6 +125,7 @@
 
 ;;;###autoload
 (defun ammonite-term-repl-load-file (file-name)
+  "Load a file to the ammonite buffer."
   (interactive (comint-get-source "Load Scala file: " nil '(scala-mode) t))
   (comint-check-source file-name)
   (with-temp-buffer
