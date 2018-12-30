@@ -36,3 +36,6 @@
    Because ~(make-comint "amm")~ throws a =Exec format error=.
    Run ~amm~ in *eshell* also get the same error.
 
+
+** Screenshot
+   [[./screenshot.png]]

@@ -1,13 +1,13 @@
-;;; ammonite-term-repl.el --- Scala Ammonite REPL in Emacs term mode.
+;;; ammonite-term-repl.el --- Scala Ammonite REPL in term mode.
 
 ;; Copyright (C) 2018-2019 Wei Zhao
 
 ;; Author: zwild <judezhao@outlook.com>
 ;; Created: 2018-12-26T22:41:19+08:00
 ;; URL: https://github.com/zwild/ammonite-term-repl
-;; Package-Requires: ((s "1.12.0") (scala-mode "0.23"))
+;; Package-Requires: ((emacs "24.3") (s "1.12.0") (scala-mode "0.23"))
 ;; Version: 0.1
-;; Keywords: ammnite, term, scala
+;; Keywords: processes, ammnite, term, scala
 
 ;;; License:
 
@@ -67,7 +67,7 @@
   :group 'ammonite-term-repl)
 
 (defcustom ammonite-term-repl-minor-mode-hook nil
-  "Hook to run after `ammonite-term-repl-minor-mode' is active."
+  "Hook to run after function `ammonite-term-repl-minor-mode' is active."
   :type 'hook
   :group 'ammonite-term-repl)
 
@@ -79,9 +79,10 @@
 (defun ammonite-term-repl-check-process ()
   "Check if there is an active ammonite process."
   (unless (comint-check-proc ammonite-term-repl-buffer-name)
-    (error "Ammonite is not running.")))
+    (error "Ammonite is not running")))
 
 (defun ammonite-term-repl-code-first-line (code)
+  "Get the first line of CODE."
   (s-trim (car-safe (s-split "\n" code))))
 
 ;;;###autoload
@@ -103,7 +104,9 @@
 
 ;;;###autoload
 (defun ammonite-term-repl-send-region (start end)
-  "Send the region to the ammonite buffer."
+  "Send the region to the ammonite buffer.
+Argument START the start region.
+Argument END the end region."
   (interactive "r")
   (ammonite-term-repl-check-process)
   (let ((code (buffer-substring-no-properties start end)))
@@ -125,7 +128,8 @@
 
 ;;;###autoload
 (defun ammonite-term-repl-load-file (file-name)
-  "Load a file to the ammonite buffer."
+  "Load a file to the ammonite buffer.
+Argument FILE-NAME the file name."
   (interactive (comint-get-source "Load Scala file: " nil '(scala-mode) t))
   (comint-check-source file-name)
   (with-temp-buffer
@@ -160,7 +164,7 @@
     (define-key map (kbd "C-c C-b") 'ammonite-term-repl-send-buffer)
     (define-key map (kbd "C-c C-l") 'ammonite-term-repl-load-file)
     map)
-  "Keymap while ammonite-term-repl-minor-mode is active.")
+  "Keymap while function ‘ammonite-term-repl-minor-mode’ is active.")
 
 ;;;###autoload
 (define-minor-mode ammonite-term-repl-minor-mode
