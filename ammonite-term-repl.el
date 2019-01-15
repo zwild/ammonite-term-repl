@@ -140,6 +140,8 @@ Argument FILE-NAME the file name."
 (defun ammonite-term-repl ()
   "Run an Ammonite REPL."
   (interactive)
+  (unless (executable-find ammonite-term-repl-program)
+    (error (format "%s is not found." ammonite-term-repl-program)))
   (with-current-buffer
       (apply 'term-ansi-make-term
              ammonite-term-repl-buffer-name
