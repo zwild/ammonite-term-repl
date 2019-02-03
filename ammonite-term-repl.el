@@ -66,11 +66,6 @@
   :type 'string
   :group 'ammonite-term-repl)
 
-(defcustom ammonite-term-repl-minor-mode-hook nil
-  "Hook to run after function `ammonite-term-repl-minor-mode' is active."
-  :type 'hook
-  :group 'ammonite-term-repl)
-
 (defcustom ammonite-term-repl-run-hook nil
   "Hook to run after starting an Ammonite REPL buffer."
   :type 'hook
@@ -171,8 +166,7 @@ Argument FILE-NAME the file name."
 ;;;###autoload
 (define-minor-mode ammonite-term-repl-minor-mode
   "Minor mode for interacting with an Ammonite REPL."
-  :keymap ammonite-term-repl-minor-mode-map
-  (run-hooks 'ammonite-term-repl-minor-mode-hook))
+  :keymap ammonite-term-repl-minor-mode-map)
 
 (provide 'ammonite-term-repl)
 
