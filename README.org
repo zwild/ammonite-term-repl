@@ -3,7 +3,7 @@
 * ammonite-term-repl
   Scala [[https://github.com/lihaoyi/Ammonite][Ammonite]] REPL in Emacs term mode.
 
-  [[https://melpa.org/#ammonite-term-repl/][https://melpa.org/packages/ammonite-term-repl-badge.svg]]
+  [[https://melpa.org/#/ammonite-term-repl/][https://melpa.org/packages/ammonite-term-repl-badge.svg]]
 
 ** Install
    #+begin_src sh
