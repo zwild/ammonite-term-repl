@@ -152,6 +152,39 @@ Argument FILE-NAME the file name."
 ;;;###autoload
 (defalias 'run-ammonite 'ammonite-term-repl)
 
+(defun ammonite-term-repl--send-string (string)
+  "Send the code to the ammonite buffer.
+Argument STRING the code to send."
+  (ammonite-term-repl-check-process)
+  (comint-send-string ammonite-term-repl-buffer-name "{\n")
+  (comint-send-string ammonite-term-repl-buffer-name string)
+  (comint-send-string ammonite-term-repl-buffer-name "\n}")
+  (comint-send-string ammonite-term-repl-buffer-name "\n")
+  (message
+   (format "Sent: %s..." (ammonite-term-repl-code-first-line string))))
+
+;;;###autoload
+(defun ammonite-term-repl-import-ivy-dependencies-from-sbt ()
+  "Try to import ivy dependencies from sbt file.
+Currently only form like
+libraryDependencies += \"com.typesafe.akka\" %% \"akka-actor\" % \"2.5.21\"
+is available."
+  (interactive)
+  (when-let* ((file-name "build.sbt")
+              (path (locate-dominating-file default-directory file-name))
+              (file (concat path file-name)))
+    (with-temp-buffer
+      (insert-file-contents file)
+      (goto-char (point-min))
+      (let ((regex "libraryDependencies[ ]+\\+=[ ]+\"\\(.+?\\)\"[ ]+%\\{1,2\\}[ ]+\"\\(.+?\\)\"[ ]+%\\{1,2\\}[ ]+\"\\(.+?\\)\"")
+            (res))
+        (while (re-search-forward regex nil t)
+          (add-to-list
+           'res
+           (format "import $ivy.`%s::%s:%s`" (match-string 1) (match-string 2) (match-string 3))
+           t))
+        (ammonite-term-repl--send-string (s-join "\n" res))))))
+
 (defvar ammonite-term-repl-minor-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-`") 'ammonite-term-repl)

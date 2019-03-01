@@ -22,12 +22,37 @@
              (lambda ()
                (ammonite-term-repl-minor-mode t)))
    #+end_src
-  
+
+   If you have a *build.sbt* with dependencies in this form (and only this form)
+   #+begin_src scala
+   libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.5.21",
+   libraryDependencies += "org.scalanlp" %% "breeze" % "0.13.2",
+   libraryDependencies += "org.scalanlp" %% "breeze-natives" % "0.13.2",
+   libraryDependencies += "org.scalanlp" %% "breeze-viz" % "0.13.2",
+   libraryDependencies += "org.apache.spark" %% "spark-core" % "2.4.0" % "provided",
+   libraryDependencies += "org.apache.spark" %% "spark-mllib" % "2.4.0" % "provided",
+   libraryDependencies += "org.apache.spark" %% "spark-sql" % "2.4.0" % "provided",
+   libraryDependencies += "org.apache.spark" %% "spark-streaming" % "2.4.0" % "provided"
+   #+end_src
+
+   command ~ammonite-term-repl-import-ivy-dependencies-from-sbt~ will try to convert and import this to your Ammonite process.
+
+   #+begin_src scala
+   import $ivy.`com.typesafe.akka::akka-actor:2.5.21`
+   import $ivy.`org.scalanlp::breeze:0.13.2`
+   import $ivy.`org.scalanlp::breeze-natives:0.13.2`
+   import $ivy.`org.scalanlp::breeze-viz:0.13.2`
+   import $ivy.`org.apache.spark::spark-core:2.4.0`
+   import $ivy.`org.apache.spark::spark-mllib:2.4.0`
+   import $ivy.`org.apache.spark::spark-sql:2.4.0`
+   import $ivy.`org.apache.spark::spark-streaming:2.4.0`
+   #+end_src
+
 ** Keybindings
-| ammonite-term-repl             | "C-`" or "C-c C-z" |
-| ammonite-term-repl-send-defun  | "C-c C-e"          |
-| ammonite-term-repl-send-region | "C-c C-r"          |
-| ammonite-term-repl-load-file   | "C-c C-l"          |
+| ammonite-term-repl             | C-` or C-c C-z |
+| ammonite-term-repl-send-defun  | C-c C-e        |
+| ammonite-term-repl-send-region | C-c C-r        |
+| ammonite-term-repl-load-file   | C-c C-l        |
 
 ** Hooks
    ~ammonite-term-repl-minor-mode-hook~
