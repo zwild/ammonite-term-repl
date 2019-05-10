@@ -48,6 +48,22 @@
    import $ivy.`org.apache.spark::spark-streaming:2.4.0`
    #+end_src
 
+*** Detecting ~predef.sc~
+
+    If you can have many ~predef.sc~ files for your Ammonite, it would be great. ~ammonite-term-repl~ can detect ~predef.sc~ file from your current location up to ~$HOME~. If you are on ~$HOME/ammonite/term/repl/scala.org~, it will try finding it in following order:
+
+    1. ~amm --predef $HOME/ammonite/term/repl/predef.sc~
+    2. ~amm --predef $HOME/ammonite/term/predef.sc~
+    3. ~amm --predef $HOME/ammonite/predef.sc~
+    4. ~amm --predef $HOME/predef.sc~
+    5. ~amm --predef $HOME/.ammonite/predef.sc~
+
+    If you don't like it, you can turn off:
+
+    #+begin_src elisp
+    (setq ammonite-term-repl-auto-detect-predef-file nil)
+    #+end_src
+
 ** Keybindings
 | ammonite-term-repl             | C-` or C-c C-z |
 | ammonite-term-repl-send-defun  | C-c C-e        |
@@ -64,6 +80,20 @@
    An example
    #+begin_src elisp
    (setq ammonite-term-repl-program-args '("-s" "--no-default-predef"))
+   #+end_src
+
+   ~ammonite-term-repl-predef-sc-filename~
+
+   You can change ~predef.sc~ filename
+   #+begin_src elisp
+   (setq ammonite-term-repl-predef-sc-filename "predef.sc")
+   #+end_src
+
+   ~ammonite-term-repl-default-predef-dir~
+
+   You can change Ammonite home directory
+   #+begin_src elisp
+   (setq ammonite-term-repl-predef-sc-filename "~/.ammonite")
    #+end_src
 
 ** Why not comint-mode
