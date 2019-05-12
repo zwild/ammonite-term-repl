@@ -93,7 +93,7 @@
 
    You can change Ammonite home directory
    #+begin_src elisp
-   (setq ammonite-term-repl-predef-sc-filename "~/.ammonite")
+   (setq ammonite-term-repl-default-predef-dir "~/.ammonite")
    #+end_src
 
 ** Why not comint-mode
