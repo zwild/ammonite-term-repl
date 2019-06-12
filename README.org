@@ -49,7 +49,6 @@
    #+end_src
 
 *** Detecting ~predef.sc~
-
     If you can have many ~predef.sc~ files for your Ammonite, it would be great. ~ammonite-term-repl~ can detect ~predef.sc~ file from your current location up to ~$HOME~. If you are on ~$HOME/ammonite/term/repl/scala.org~, it will try finding it in following order:
 
     1. ~amm --predef $HOME/ammonite/term/repl/predef.sc~
@@ -62,6 +61,14 @@
 
     #+begin_src elisp
     (setq ammonite-term-repl-auto-detect-predef-file nil)
+    #+end_src
+
+*** Auto config mill project
+    If you use [[https://github.com/lihaoyi/mill][mill]] to build your project, this will auto set ~ammonite-term-repl-program~ to "mill" and ~ammonite-term-repl-program-args~ to '(-i foo.repl).
+
+    If you don't want this, you can turn off:
+    #+begin_src elisp
+    (setq ammonite-term-repl-auto-config-mill-project nil)
     #+end_src
 
 ** Keybindings
