@@ -193,6 +193,10 @@ Argument FILE-NAME the file name."
           (setq ammonite-term-repl-program-local-args
                 (append ammonite-term-repl-program-args `("-i" ,full)))))))
 
+  (message (format "Run: %s %s"
+                   ammonite-term-repl-program
+                   (s-join " " ammonite-term-repl-program-local-args)))
+
   (with-current-buffer
       (apply 'term-ansi-make-term
              ammonite-term-repl-buffer-name
@@ -205,10 +209,7 @@ Argument FILE-NAME the file name."
     (setq-local term-scroll-show-maximum-output t)
     (setq-local term-scroll-to-bottom-on-output t)
     (run-hooks 'ammonite-term-repl-run-hook))
-  (pop-to-buffer ammonite-term-repl-buffer-name)
-  (message (format "Run: %s %s"
-                   ammonite-term-repl-program
-                   (s-join " " ammonite-term-repl-program-local-args))))
+  (pop-to-buffer ammonite-term-repl-buffer-name))
 
 ;;;###autoload
 (defalias 'run-ammonite 'ammonite-term-repl)
