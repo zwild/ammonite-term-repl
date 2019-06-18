@@ -105,10 +105,6 @@ and `ammonite-term-repl-program-args' to '(-i foo.repl)."
   "Get the first line of CODE."
   (s-trim (car-safe (s-split "\n" code))))
 
-(defun ammonite-term-repl-kill-buffer-when-died ()
-  (unless (comint-check-proc ammonite-term-repl-buffer-name)
-    (ignore-errors (kill-buffer ammonite-term-repl-buffer-name))))
-
 ;;;###autoload
 (defun ammonite-term-repl-send-defun ()
   "Send the definition to the ammonite buffer."
@@ -166,49 +162,53 @@ Argument FILE-NAME the file name."
   (interactive)
   (unless (executable-find ammonite-term-repl-program)
     (error (format "%s is not found." ammonite-term-repl-program)))
-  (ammonite-term-repl-kill-buffer-when-died)
-  (setq ammonite-term-repl-program-local-args ammonite-term-repl-program-args)
 
-  (when-let ((_ ammonite-term-repl-auto-detect-predef-file)
-             (path (or (locate-dominating-file default-directory ammonite-term-repl-predef-sc-filename)
-                       ammonite-term-repl-default-predef-dir))
-             (file (expand-file-name ammonite-term-repl-predef-sc-filename path)))
-    (setq ammonite-term-repl-program-local-args
-          (append ammonite-term-repl-program-args `("-p" ,file))))
+  (unless (comint-check-proc ammonite-term-repl-buffer-name)
+    (ignore-errors (kill-buffer ammonite-term-repl-buffer-name))
 
-  (when-let ((_ ammonite-term-repl-auto-config-mill-project)
-             (target "build.sc")
-             (path (locate-dominating-file default-directory target))
-             (file (expand-file-name target path)))
-    (setq default-directory path)
-    (setq-local ammonite-term-repl-program (if path "mill" "amm"))
-    (with-temp-buffer
-      (insert-file-contents file)
-      (goto-char (point-min))
-      (let ((res))
-        (while (re-search-forward "^object[ ]+\\([^ ]+\\)[ ]+extends" nil t)
-          (add-to-list 'res (match-string 1) t))
-        (let* ((project (completing-read "Project: " res))
-               (full (concat project ".repl")))
-          (setq ammonite-term-repl-program-local-args
-                (append ammonite-term-repl-program-args `("-i" ,full)))))))
+    (setq ammonite-term-repl-program-local-args ammonite-term-repl-program-args)
 
-  (message (format "Run: %s %s"
-                   ammonite-term-repl-program
-                   (s-join " " ammonite-term-repl-program-local-args)))
+    (when-let ((_ ammonite-term-repl-auto-detect-predef-file)
+               (path (or (locate-dominating-file default-directory ammonite-term-repl-predef-sc-filename)
+                         ammonite-term-repl-default-predef-dir))
+               (file (expand-file-name ammonite-term-repl-predef-sc-filename path)))
+      (setq ammonite-term-repl-program-local-args
+            (append ammonite-term-repl-program-args `("-p" ,file))))
 
-  (with-current-buffer
-      (apply 'term-ansi-make-term
-             ammonite-term-repl-buffer-name
-             ammonite-term-repl-program
-             nil
-             ammonite-term-repl-program-local-args)
-    (term-char-mode)
-    (term-set-escape-char ?\C-x)
-    (setq-local term-prompt-regexp ammonite-term-repl-prompt-regex)
-    (setq-local term-scroll-show-maximum-output t)
-    (setq-local term-scroll-to-bottom-on-output t)
-    (run-hooks 'ammonite-term-repl-run-hook))
+    (when-let ((_ ammonite-term-repl-auto-config-mill-project)
+               (target "build.sc")
+               (path (locate-dominating-file default-directory target))
+               (file (expand-file-name target path)))
+      (setq default-directory path)
+      (setq-local ammonite-term-repl-program (if path "mill" "amm"))
+      (with-temp-buffer
+        (insert-file-contents file)
+        (goto-char (point-min))
+        (let ((res))
+          (while (re-search-forward "^object[ ]+\\([^ ]+\\)[ ]+extends" nil t)
+            (add-to-list 'res (match-string 1) t))
+          (let* ((project (completing-read "Project: " res))
+                 (full (concat project ".repl")))
+            (setq ammonite-term-repl-program-local-args
+                  (append ammonite-term-repl-program-args `("-i" ,full)))))))
+
+    (message (format "Run: %s %s"
+                     ammonite-term-repl-program
+                     (s-join " " ammonite-term-repl-program-local-args)))
+
+    (with-current-buffer
+        (apply 'term-ansi-make-term
+               ammonite-term-repl-buffer-name
+               ammonite-term-repl-program
+               nil
+               ammonite-term-repl-program-local-args)
+      (term-char-mode)
+      (term-set-escape-char ?\C-x)
+      (setq-local term-prompt-regexp ammonite-term-repl-prompt-regex)
+      (setq-local term-scroll-show-maximum-output t)
+      (setq-local term-scroll-to-bottom-on-output t)
+      (run-hooks 'ammonite-term-repl-run-hook)))
+
   (pop-to-buffer ammonite-term-repl-buffer-name))
 
 ;;;###autoload
