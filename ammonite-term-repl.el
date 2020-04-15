@@ -41,6 +41,7 @@
 (require 'comint)
 (require 'scala-mode)
 (require 's)
+(require 'subr-x)
 
 (defgroup ammonite-term-repl nil
   "A minor mode for a Ammonite REPL."
